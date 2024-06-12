@@ -1,13 +1,23 @@
 const express = require("express");
+const dotenv = require("dotenv");
+const mongodbConnection = require("./db/mongoConnection");
+dotenv.config();
+
+//Routers
+const authRouter = require("./routes/auth.routes.js");
 
 const app = express();
+app.use(express.json());
 
-app.get("/", (req, res) => {
+app.use("/auth", authRouter);
+
+app.use("/", (req, res) => {
   res.send("Hi.....");
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
+  mongodbConnection();
   console.log(`The app is running on http://localhost:${PORT}`);
 });
