@@ -35,8 +35,10 @@ const registerController = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, salt);
 
     //Generating Profile Picture
-    const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
-    const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
+    const profilePic =
+      gender === "male"
+        ? `https://avatar.iran.liara.run/public/boy?username=${username}`
+        : `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
     const newUser = new User({
       name,
@@ -47,13 +49,13 @@ const registerController = async (req, res) => {
       role,
       gender,
       dateOfBirth,
-      profilePic: gender === "male" ? boyProfilePic : girlProfilePic,
+      profilePic,
     });
 
     if (newUser) {
-      generateTokenAndSetCookie(newUser._id, res);
-
       await newUser.save();
+
+      generateTokenAndSetCookie(newUser._id, res);
 
       res.status(201).json({
         _id: newUser._id,
@@ -75,6 +77,33 @@ const registerController = async (req, res) => {
 
 const loginController = async (req, res) => {
   try {
+    const { identifier, password } = req.body;
+    const user = await User.findOne({
+      $or: [{ email: identifier }, { username: identifier }],
+    });
+    if (!user) {
+      return res.status(400).json({ error: "User not exist!" });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(400).json({ error: "Wrong Password!" });
+    }
+
+    //Token create
+    generateTokenAndSetCookie(user._id, res);
+
+    res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      phone: user.phone,
+      gender: user.gender,
+      dateOfBirth: user.dateOfBirth,
+      profilePic: user.profilePic,
+    });
   } catch (e) {
     console.log("Error In login Controller ---> ", e.message);
     res.status(500).json({ error: "Internal server error!" });
