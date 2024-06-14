@@ -1,9 +1,25 @@
 const bcrypt = require("bcrypt");
+const { body, validationResult } = require("express-validator");
 
 const User = require("../models/usermodel.js");
 const generateTokenAndSetCookie = require("../utils/generateToken.js");
 
 const registerController = async (req, res) => {
+  // Input validation
+  await body("name").isString().trim().notEmpty().run(req);
+  await body("username").isString().trim().notEmpty().run(req);
+  await body("email").isEmail().normalizeEmail().run(req);
+  await body("password").isString().trim().isLength({ min: 6 }).run(req);
+  await body("confirmPassword").isString().trim().isLength({ min: 6 }).run(req);
+  await body("role").isString().trim().notEmpty().run(req);
+  await body("gender").isString().trim().notEmpty().run(req);
+  await body("dateOfBirth").isDate().run(req);
+  await body("phone").isMobilePhone().run(req);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     const {
       name,
@@ -76,13 +92,22 @@ const registerController = async (req, res) => {
 };
 
 const loginController = async (req, res) => {
+  // Input validation
+  await body("identifier").isString().trim().run(req);
+  await body("password").isString().trim().run(req);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   try {
     const { identifier, password } = req.body;
     const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
     });
     if (!user) {
-      return res.status(400).json({ error: "User not exist!" });
+      return res.status(400).json({ error: "User does not exist!" });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);

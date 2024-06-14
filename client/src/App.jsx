@@ -1,7 +1,15 @@
+import { Routes, Route } from "react-router-dom";
+
+import Register from "./pages/Auth/Register";
+import Login from "./pages/Auth/Login";
+
 const App = () => {
   return (
     <div>
-      <h1>Docmate Coming Soon!</h1>
+      <Routes>
+        <Route path="/auth/register" element={<Register />} />
+        <Route path="/auth/login" element={<Login />} />
+      </Routes>
     </div>
   );
 };
