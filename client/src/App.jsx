@@ -1,17 +1,27 @@
-import { Routes, Route } from "react-router-dom";
-
+import ProtectedRoute from "./components/ProtectedRoute";
+import Profile from "./pages/Profile/Profile";
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 
+import { Navigate, useRoutes } from "react-router-dom";
+
 const App = () => {
-  return (
-    <div>
-      <Routes>
-        <Route path="/auth/register" element={<Register />} />
-        <Route path="/auth/login" element={<Login />} />
-      </Routes>
-    </div>
-  );
+  let routes = useRoutes([
+    { path: "/", element: <Navigate to="/login" replace /> },
+    { path: "/register", element: <Register /> },
+    { path: "/login", element: <Login /> },
+    {
+      path: "/profile",
+      element: (
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      ),
+    },
+    // Add other protected routes here
+  ]);
+
+  return routes;
 };
 
 export default App;
