@@ -1,6 +1,9 @@
 import AuthForm from "../../components/Common/AuthForm";
+import useLogin from "../../hooks/auth/useLogin";
 
 const Login = () => {
+  const { login } = useLogin();
+
   const fields = [
     {
       label: "Identifier",
@@ -16,13 +19,18 @@ const Login = () => {
     },
   ];
 
-  const onSubmit = async (data) => {
-    try {
-      // const response = await axios.post("/api/auth/login", data);
-      console.log("Login successful:", data);
-    } catch (error) {
-      console.error("Login error:", error.response.data);
-    }
+  const onSubmit = async (data, reset) => {
+    await login(data, reset);
+
+    // try {
+    //   const response = await axiosInstance.post("/auth/login", data, {
+    //     withCredentials: true,
+    //   });
+    //   console.log(response.data);
+    //   reset();
+    // } catch (error) {
+    //   console.error("Login error:", error.response.data);
+    // }
   };
 
   return (

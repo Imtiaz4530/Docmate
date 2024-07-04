@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import { Container, Typography, Box, TextField, Button } from "@mui/material";
-import axios from "axios";
+import { Container, Box, Button, Grid, Avatar, Paper } from "@mui/material";
+import { useStoreState } from "easy-peasy";
+
+import CustomTextField from "../../components/Common/CustomTextField";
+import CustomTypography from "../../components/Common/CustomTypo";
+import axiosInstance from "../../api/axiosInstance";
 
 const Profile = () => {
   const [profile, setProfile] = useState({});
@@ -15,13 +19,14 @@ const Profile = () => {
     role: "",
   });
 
+  const authUser = useStoreState((state) => state.user);
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("/api/users/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axiosInstance.get(
+          `/api/profile/${authUser._id}`
+        );
         setProfile(response.data);
         setFormData(response.data);
       } catch (error) {
@@ -29,7 +34,7 @@ const Profile = () => {
       }
     };
     fetchProfile();
-  }, []);
+  }, [authUser._id]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,10 +43,11 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.put("/api/users/profile", formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axiosInstance.put(
+        `/api/profile/update/${authUser._id}`,
+        formData
+      );
+      console.log(response);
       setProfile(response.data);
       setEditMode(false);
     } catch (error) {
@@ -50,114 +56,147 @@ const Profile = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box mt={5}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Profile
-        </Typography>
+    <Container maxWidth="md" sx={{ mt: 5 }}>
+      <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
+        <Box display="flex" justifyContent="center" mb={3}>
+          <Avatar
+            alt="Profile Picture"
+            src={profile.avatarUrl}
+            sx={{ width: 100, height: 100, mb: 2 }}
+          />
+        </Box>
+        <Box display="flex" justifyContent="center" mb={3}>
+          <CustomTypography variant="h4" component="h1" gutterBottom>
+            Profile
+          </CustomTypography>
+        </Box>
         {editMode ? (
           <form onSubmit={handleSubmit}>
-            <TextField
-              label="Name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Gender"
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Date of Birth"
-              name="dateOfBirth"
-              value={formData.dateOfBirth}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Role"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              disabled
-            />
-            <Button type="submit" variant="contained" color="primary">
-              Save
-            </Button>
-            <Button
-              onClick={() => setEditMode(false)}
-              variant="outlined"
-              color="secondary"
-            >
-              Cancel
-            </Button>
+            <Grid container spacing={2}>
+              <CustomTextField
+                label="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                gridProps={{ xs: 12, sm: 6 }}
+              />
+              <CustomTextField
+                label="Username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                gridProps={{ xs: 12, sm: 6 }}
+              />
+              <CustomTextField
+                label="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                gridProps={{ xs: 12, sm: 6 }}
+              />
+              <CustomTextField
+                label="Phone"
+                name="phone"
+                value={formData.phone.toString()}
+                onChange={handleChange}
+                gridProps={{ xs: 12, sm: 6 }}
+              />
+              <CustomTextField
+                label="Gender"
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                gridProps={{ xs: 12, sm: 6 }}
+              />
+              <CustomTextField
+                label="Date of Birth"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                gridProps={{ xs: 12, sm: 6 }}
+                disabled
+              />
+              <CustomTextField
+                label="Role"
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                disabled
+                gridProps={{ xs: 12 }}
+              />
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Save
+                </Button>
+                <Button
+                  onClick={() => setEditMode(false)}
+                  variant="outlined"
+                  color="secondary"
+                  fullWidth
+                  sx={{ mt: 2 }}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+            </Grid>
           </form>
         ) : (
-          <div>
-            <Typography variant="body1">
-              <strong>Name:</strong> {profile.name}
-            </Typography>
-            <Typography variant="body1">
-              <strong>Username:</strong> {profile.username}
-            </Typography>
-            <Typography variant="body1">
-              <strong>Email:</strong> {profile.email}
-            </Typography>
-            <Typography variant="body1">
-              <strong>Phone:</strong> {profile.phone}
-            </Typography>
-            <Typography variant="body1">
-              <strong>Gender:</strong> {profile.gender}
-            </Typography>
-            <Typography variant="body1">
-              <strong>Date of Birth:</strong> {profile.dateOfBirth}
-            </Typography>
-            <Typography variant="body1">
-              <strong>Role:</strong> {profile.role}
-            </Typography>
-            <Button
-              onClick={() => setEditMode(true)}
-              variant="contained"
-              color="primary"
-            >
-              Edit
-            </Button>
-          </div>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <CustomTypography variant="body1">
+                <strong>Name:</strong> {profile.name || authUser.name}
+              </CustomTypography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTypography variant="body1">
+                <strong>Username:</strong>{" "}
+                {profile.username || authUser.username}
+              </CustomTypography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTypography variant="body1">
+                <strong>Email:</strong> {profile.email || authUser.email}
+              </CustomTypography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTypography variant="body1">
+                <strong>Phone:</strong> {profile.phone || authUser.phone}
+              </CustomTypography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTypography variant="body1">
+                <strong>Gender:</strong> {profile.gender || authUser.gender}
+              </CustomTypography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTypography variant="body1">
+                <strong>Date of Birth:</strong>{" "}
+                {profile.dateOfBirth || authUser.dateOfBirth}
+              </CustomTypography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTypography variant="body1">
+                <strong>Role:</strong> {profile.role || authUser.role}
+              </CustomTypography>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                onClick={() => setEditMode(true)}
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
+                Edit
+              </Button>
+            </Grid>
+          </Grid>
         )}
-      </Box>
+      </Paper>
     </Container>
   );
 };

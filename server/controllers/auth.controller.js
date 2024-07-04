@@ -9,8 +9,8 @@ const registerController = async (req, res) => {
   await body("name").isString().trim().notEmpty().run(req);
   await body("username").isString().trim().notEmpty().run(req);
   await body("email").isEmail().normalizeEmail().run(req);
-  await body("password").isString().trim().isLength({ min: 6 }).run(req);
-  await body("confirmPassword").isString().trim().isLength({ min: 6 }).run(req);
+  await body("password").isString().trim().isLength({ min: 8 }).run(req);
+  await body("confirmPassword").isString().trim().isLength({ min: 8 }).run(req);
   await body("role").isString().trim().notEmpty().run(req);
   await body("gender").isString().trim().notEmpty().run(req);
   await body("dateOfBirth").isDate().run(req);
@@ -93,8 +93,8 @@ const registerController = async (req, res) => {
 
 const loginController = async (req, res) => {
   // Input validation
-  await body("identifier").isString().trim().run(req);
-  await body("password").isString().trim().run(req);
+  // await body("identifier").isString().trim().run(req);
+  // await body("password").isString().trim().run(req);
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

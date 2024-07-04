@@ -22,6 +22,7 @@ const AuthForm = ({ title, fields, onSubmit, buttonLabel }) => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   useEffect(() => {
@@ -30,6 +31,10 @@ const AuthForm = ({ title, fields, onSubmit, buttonLabel }) => {
       setFour(fields.slice(5, 9));
     }
   }, [fields]);
+
+  const handleFormSubmit = (data) => {
+    onSubmit(data, reset);
+  };
 
   return (
     <Container
@@ -71,7 +76,7 @@ const AuthForm = ({ title, fields, onSubmit, buttonLabel }) => {
           <Typography variant="h4" gutterBottom align="center">
             Docmate
           </Typography>
-          {title === "Register" && (
+          {(title === "Register" || title === "Edit Your Profile") && (
             <Typography variant="subtitle1" gutterBottom align="center">
               Seamless Healthcare Access and Consultation at Your Fingertips.
             </Typography>
@@ -90,7 +95,7 @@ const AuthForm = ({ title, fields, onSubmit, buttonLabel }) => {
           }}
         >
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(handleFormSubmit)}
             className="authenticationForm"
           >
             <Box
@@ -208,25 +213,37 @@ const AuthForm = ({ title, fields, onSubmit, buttonLabel }) => {
                 ))
               )}
 
-              <Link
-                href="#"
-                variant="body2"
-                sx={{ alignSelf: "flex-end", marginBottom: "1rem" }}
-              >
-                Forgot password?
-              </Link>
+              {title === "Login" && (
+                <Link
+                  href="#"
+                  variant="body2"
+                  sx={{ alignSelf: "flex-end", marginBottom: "1rem" }}
+                >
+                  Forgot password?
+                </Link>
+              )}
               <Button
                 type="submit"
                 variant="contained"
                 color="primary"
                 fullWidth
-                sx={{ marginBottom: "1rem" }}
+                sx={{ marginBottom: "1rem", marginTop: "0.5rem" }}
               >
                 {buttonLabel}
               </Button>
-              <Link href="#" variant="body2" sx={{ marginTop: "1rem" }}>
-                Are you new? Create an Account
-              </Link>
+              {title === "Login" ? (
+                <Link
+                  href="/register"
+                  variant="body2"
+                  sx={{ marginTop: "1rem" }}
+                >
+                  Are you new? Create an Account
+                </Link>
+              ) : (
+                <Link href="/login" variant="body2" sx={{ marginTop: "1rem" }}>
+                  Already have an account? Login here
+                </Link>
+              )}
             </Box>
           </form>
         </Grid>

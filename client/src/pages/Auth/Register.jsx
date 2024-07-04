@@ -1,3 +1,4 @@
+import axiosInstance from "../../api/axiosInstance";
 import AuthForm from "../../components/Common/AuthForm";
 
 const Register = () => {
@@ -76,10 +77,13 @@ const Register = () => {
     },
   ];
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data, reset) => {
     try {
-      // const response = await axios.post("/api/auth/register", data);
-      console.log("Registration successful:", data);
+      const response = await axiosInstance.post("/api/auth/register", data, {
+        withCredentials: true,
+      });
+      console.log(response.data);
+      reset();
     } catch (e) {
       console.error("Registration error:", e.message);
     }

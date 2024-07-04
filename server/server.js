@@ -1,15 +1,26 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cors = require("cors");
+const cookie = require("cookie-parser");
 const mongodbConnection = require("./db/mongoConnection");
 dotenv.config();
 
 //Routers
 const authRouter = require("./routes/auth.routes.js");
+const profileRouter = require("./routes/profile.routes.js");
 
 const app = express();
 app.use(express.json());
+app.use(cookie());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/profile", profileRouter);
 
 app.use("/", (req, res) => {
   res.send("Hi.....");
