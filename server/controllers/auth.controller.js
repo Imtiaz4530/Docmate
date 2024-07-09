@@ -1,10 +1,10 @@
-const bcrypt = require("bcrypt");
-const { body, validationResult } = require("express-validator");
+import bcrypt from "bcrypt";
+import { body, validationResult } from "express-validator";
 
-const User = require("../models/usermodel.js");
-const generateTokenAndSetCookie = require("../utils/generateToken.js");
+import User from "../models/user.model.js";
+import generateTokenAndSetCookie from "../utils/generateToken.js";
 
-const registerController = async (req, res) => {
+export const registerController = async (req, res) => {
   // Input validation
   await body("name").isString().trim().notEmpty().run(req);
   await body("username").isString().trim().notEmpty().run(req);
@@ -91,10 +91,10 @@ const registerController = async (req, res) => {
   }
 };
 
-const loginController = async (req, res) => {
+export const loginController = async (req, res) => {
   // Input validation
-  // await body("identifier").isString().trim().run(req);
-  // await body("password").isString().trim().run(req);
+  await body("identifier").isString().trim().run(req);
+  await body("password").isString().trim().run(req);
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -133,9 +133,4 @@ const loginController = async (req, res) => {
     console.log("Error In login Controller ---> ", e.message);
     res.status(500).json({ error: "Internal server error!" });
   }
-};
-
-module.exports = {
-  registerController,
-  loginController,
 };

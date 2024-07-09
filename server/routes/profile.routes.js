@@ -1,13 +1,15 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   getUserProfile,
   updateProfileController,
-} = require("../controllers/profile.controller.js");
-const protectedRoute = require("../middleware/protectRoute.js");
+  getAllDoctors,
+} from "../controllers/profile.controller.js";
+import protectedRoute from "../middleware/protectRoute.js";
 
 const router = express.Router();
 
 router.get("/:id", protectedRoute, getUserProfile);
 router.put("/update/:id", protectedRoute, updateProfileController);
+router.get("/doctors", protectedRoute, getAllDoctors);
 
-module.exports = router;
+export default router;

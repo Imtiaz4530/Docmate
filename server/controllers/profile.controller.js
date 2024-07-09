@@ -1,6 +1,6 @@
-const User = require("../models/usermodel.js");
+import User from "../models/user.model.js";
 
-const getUserProfile = async (req, res) => {
+export const getUserProfile = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -20,7 +20,7 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-const updateProfileController = async (req, res) => {
+export const updateProfileController = async (req, res) => {
   try {
     const { name, username, email, phone, dateOfBirth, gender } = req.body;
     const { id } = req.params;
@@ -50,4 +50,12 @@ const updateProfileController = async (req, res) => {
   }
 };
 
-module.exports = { getUserProfile, updateProfileController };
+export const getAllDoctors = async (req, res) => {
+  try {
+    const doctors = await User.find({ role: "doctor" }).select("-password");
+    res.status(200).json(doctors);
+  } catch (error) {
+    console.log("Error In Get All Doctors Controller ---> ", e.message);
+    res.status(500).json({ error: "Internal server error!" });
+  }
+};

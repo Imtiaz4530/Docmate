@@ -1,36 +1,61 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-
-import Profile from "./pages/Profile/Profile";
-import Register from "./pages/Auth/Register";
-import Login from "./pages/Auth/Login";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { useEffect, useState } from "react";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import { useEffect } from "react";
+
+import "./App.css";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
+import Profile from "./pages/Profile/Profile";
+import ScheduleAppointment from "./pages/Appointment/ScheduleAppointment";
+import LoadingSpinner from "./components/Common/LoadingSpinner";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 const App = () => {
   const authUser = useStoreState((state) => state.user);
   const setUser = useStoreActions((actions) => actions.setUser);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    setLoading(false);
   }, [setUser]);
+  console.log(authUser);
 
+  if (loading) {
+    return <LoadingSpinner />;
+  }
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={authUser ? <Profile /> : <Navigate to={"/login"} />}
-      />
-      <Route
-        path="/login"
-        element={authUser ? <Navigate to={"/"} /> : <Login />}
-      />
-      <Route
-        path="/register"
-        element={authUser ? <Navigate to={"/"} /> : <Register />}
-      />
-    </Routes>
+    <div className="container">
+      <Routes>
+        <Route
+          path="/"
+          element={authUser ? <Dashboard /> : <Navigate to={"/login"} />}
+        />
+        <Route
+          path="/login"
+          element={authUser ? <Navigate to={"/"} /> : <Login />}
+        />
+        <Route
+          path="/register"
+          element={authUser ? <Navigate to={"/"} /> : <Register />}
+        />
+        <Route
+          path="/schedule-appointment"
+          element={
+            authUser ? <ScheduleAppointment /> : <Navigate to={"/login"} />
+          }
+        />
+        <Route
+          path="/profile"
+          element={authUser ? <Profile /> : <Navigate to={"/login"} />}
+        />
+      </Routes>
+      <Toaster />
+    </div>
   );
 };
 

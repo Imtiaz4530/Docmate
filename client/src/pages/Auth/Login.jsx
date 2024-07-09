@@ -21,16 +21,6 @@ const Login = () => {
 
   const onSubmit = async (data, reset) => {
     await login(data, reset);
-
-    // try {
-    //   const response = await axiosInstance.post("/auth/login", data, {
-    //     withCredentials: true,
-    //   });
-    //   console.log(response.data);
-    //   reset();
-    // } catch (error) {
-    //   console.error("Login error:", error.response.data);
-    // }
   };
 
   return (

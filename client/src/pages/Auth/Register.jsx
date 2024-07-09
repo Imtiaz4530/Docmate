@@ -1,7 +1,9 @@
-import axiosInstance from "../../api/axiosInstance";
 import AuthForm from "../../components/Common/AuthForm";
+import useRegister from "../../hooks/auth/useRegister";
 
 const Register = () => {
+  const { register } = useRegister();
+
   const fields = [
     {
       label: "Name",
@@ -78,15 +80,7 @@ const Register = () => {
   ];
 
   const onSubmit = async (data, reset) => {
-    try {
-      const response = await axiosInstance.post("/api/auth/register", data, {
-        withCredentials: true,
-      });
-      console.log(response.data);
-      reset();
-    } catch (e) {
-      console.error("Registration error:", e.message);
-    }
+    await await register(data, reset);
   };
 
   return (

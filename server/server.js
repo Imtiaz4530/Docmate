@@ -1,26 +1,27 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const cookie = require("cookie-parser");
-const mongodbConnection = require("./db/mongoConnection");
+import express from "express";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import mongodbConnection from "./db/mongoConnection.js";
 dotenv.config();
 
 //Routers
-const authRouter = require("./routes/auth.routes.js");
-const profileRouter = require("./routes/profile.routes.js");
+import authRouter from "./routes/auth.routes.js";
+import profileRouter from "./routes/profile.routes.js";
 
 const app = express();
 app.use(express.json());
-app.use(cookie());
+app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
 
 app.use("/api/auth", authRouter);
 app.use("/api/profile", profileRouter);
+app.use("/api/appointments", profileRouter);
 
 app.use("/", (req, res) => {
   res.send("Hi.....");

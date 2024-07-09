@@ -1,59 +1,20 @@
-import { useEffect, useState } from "react";
 import { Container, Box, Button, Grid, Avatar, Paper } from "@mui/material";
-import { useStoreState } from "easy-peasy";
 
 import CustomTextField from "../../components/Common/CustomTextField";
 import CustomTypography from "../../components/Common/CustomTypo";
-import axiosInstance from "../../api/axiosInstance";
+import useProfile from "../../hooks/profile/useProfile";
 
 const Profile = () => {
-  const [profile, setProfile] = useState({});
-  const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    username: "",
-    email: "",
-    phone: "",
-    gender: "",
-    dateOfBirth: "",
-    role: "",
-  });
-
-  const authUser = useStoreState((state) => state.user);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axiosInstance.get(
-          `/api/profile/${authUser._id}`
-        );
-        setProfile(response.data);
-        setFormData(response.data);
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
-    fetchProfile();
-  }, [authUser._id]);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axiosInstance.put(
-        `/api/profile/update/${authUser._id}`,
-        formData
-      );
-      console.log(response);
-      setProfile(response.data);
-      setEditMode(false);
-    } catch (error) {
-      console.error("Error updating profile:", error);
-    }
-  };
+  const {
+    authUser,
+    editMode,
+    formData,
+    handleChange,
+    handleSubmit,
+    profile,
+    setEditMode,
+    dob,
+  } = useProfile();
 
   return (
     <Container maxWidth="md" sx={{ mt: 5 }}>
@@ -61,7 +22,7 @@ const Profile = () => {
         <Box display="flex" justifyContent="center" mb={3}>
           <Avatar
             alt="Profile Picture"
-            src={profile.avatarUrl}
+            src={profile.profilePic}
             sx={{ width: 100, height: 100, mb: 2 }}
           />
         </Box>
@@ -175,8 +136,7 @@ const Profile = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTypography variant="body1">
-                <strong>Date of Birth:</strong>{" "}
-                {profile.dateOfBirth || authUser.dateOfBirth}
+                <strong>Date of Birth:</strong> {dob}
               </CustomTypography>
             </Grid>
             <Grid item xs={12} sm={6}>
