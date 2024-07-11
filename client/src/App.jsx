@@ -9,7 +9,8 @@ import Register from "./pages/Auth/Register";
 import Profile from "./pages/Profile/Profile";
 import ScheduleAppointment from "./pages/Appointment/ScheduleAppointment";
 import LoadingSpinner from "./components/Common/LoadingSpinner";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import PatientDashboard from "./pages/PatientDashboard/PatientDashboard";
+import HomePage from "./pages/Home/HomePage";
 
 const App = () => {
   const authUser = useStoreState((state) => state.user);
@@ -23,7 +24,6 @@ const App = () => {
     }
     setLoading(false);
   }, [setUser]);
-  console.log(authUser);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -31,10 +31,7 @@ const App = () => {
   return (
     <div className="container">
       <Routes>
-        <Route
-          path="/"
-          element={authUser ? <Dashboard /> : <Navigate to={"/login"} />}
-        />
+        <Route path="/" element={<HomePage />} />
         <Route
           path="/login"
           element={authUser ? <Navigate to={"/"} /> : <Login />}
@@ -48,6 +45,10 @@ const App = () => {
           element={
             authUser ? <ScheduleAppointment /> : <Navigate to={"/login"} />
           }
+        />
+        <Route
+          path="/patient-dashboard"
+          element={authUser ? <PatientDashboard /> : <Navigate to={"/login"} />}
         />
         <Route
           path="/profile"

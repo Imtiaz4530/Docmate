@@ -11,7 +11,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const ScheduleAppointment = () => {
-  const { control, handleSubmit, reset } = useForm();
+  const { control, handleSubmit } = useForm();
   const [doctors, setDoctors] = useState([]);
   const history = useNavigate();
 
