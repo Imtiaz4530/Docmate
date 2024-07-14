@@ -8,6 +8,7 @@ dotenv.config();
 //Routers
 import authRouter from "./routes/auth.routes.js";
 import profileRouter from "./routes/profile.routes.js";
+import appointmentRouter from "./routes/appointment.routes.js";
 
 const app = express();
 app.use(express.json());
@@ -21,7 +22,7 @@ app.use(
 
 app.use("/api/auth", authRouter);
 app.use("/api/profile", profileRouter);
-app.use("/api/appointments", profileRouter);
+app.use("/api/appointments", appointmentRouter);
 
 app.use("/", (req, res) => {
   res.send("Hi.....");

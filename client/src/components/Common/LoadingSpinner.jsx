@@ -1,9 +1,9 @@
-import Spinner from "react-loading-spinner";
+import { CircularProgress } from "@mui/material";
 
 const LoadingSpinner = () => {
   return (
     <div className="loading-spinner">
-      <Spinner size="large" color="#007bff" />
+      <CircularProgress />
     </div>
   );
 };

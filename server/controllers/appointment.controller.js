@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, validationResult } from "express-validator";
 import Appointment from "../models/appointment.model.js";
 
 export const createAppointment = async (req, res) => {

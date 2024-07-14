@@ -26,7 +26,7 @@ const useFormatDOB = (timestamp) => {
     ];
     const monthName = months[date.getUTCMonth()];
 
-    return `${day} - ${monthName} - ${year}`;
+    return `${day}-${monthName}-${year}`;
   }, [timestamp]);
 
   return formattedDate;

@@ -2,7 +2,8 @@ import User from "../models/user.model.js";
 
 export const getUserProfile = async (req, res) => {
   try {
-    const { id } = req.params;
+    // const { id } = req.params;
+    const { id } = req.query;
 
     //Checking ID Format
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {

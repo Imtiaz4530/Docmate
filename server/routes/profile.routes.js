@@ -8,7 +8,7 @@ import protectedRoute from "../middleware/protectRoute.js";
 
 const router = express.Router();
 
-router.get("/:id", protectedRoute, getUserProfile);
+router.get("/", protectedRoute, getUserProfile);
 router.put("/update/:id", protectedRoute, updateProfileController);
 router.get("/doctors", protectedRoute, getAllDoctors);
 
