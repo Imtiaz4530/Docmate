@@ -13,8 +13,8 @@ import PatientDashboard from "./pages/PatientDashboard/PatientDashboard";
 import HomePage from "./pages/Home/HomePage";
 
 const App = () => {
-  const authUser = useStoreState((state) => state.user);
-  const setUser = useStoreActions((actions) => actions.setUser);
+  const authUser = useStoreState((state) => state.user.user);
+  const setUser = useStoreActions((actions) => actions.user.setUser);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

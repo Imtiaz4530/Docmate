@@ -6,7 +6,7 @@ import axiosInstance from "../../api/axiosInstance";
 const useLogin = () => {
   const [loading, setLoading] = useState(false);
 
-  const setUser = useStoreActions((actions) => actions.setUser);
+  const setUser = useStoreActions((actions) => actions.user.setUser);
   const login = async (data, reset) => {
     setLoading(true);
     try {

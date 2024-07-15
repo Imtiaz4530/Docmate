@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import CustomTextField from "../../components/Common/CustomTextField";
 import useScheduleAppointment from "../../hooks/scheduleAppointment/useScheduleAppointment";
 import LoadingSpinner from "../../components/Common/LoadingSpinner";
+import { getCurrentDate } from "../../utils/getCurrentTime";
 
 const ScheduleAppointment = () => {
   const {
@@ -76,6 +77,9 @@ const ScheduleAppointment = () => {
                 onBlur={field.onBlur}
                 error={!!errors.date}
                 helperText={errors.date ? errors.date.message : ""}
+                inputProps={{
+                  min: getCurrentDate(),
+                }}
               />
             )}
           />

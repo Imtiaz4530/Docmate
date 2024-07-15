@@ -1,13 +1,8 @@
-import { createStore, action } from "easy-peasy";
+import { createStore } from "easy-peasy";
+import userModel from "./userModel";
 
 const store = createStore({
-  user: null,
-  setUser: action((state, payload) => {
-    state.user = payload;
-  }),
-  clearUser: action((state) => {
-    state.user = null;
-  }),
+  user: userModel,
 });
 
 export default store;

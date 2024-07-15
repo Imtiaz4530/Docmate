@@ -8,7 +8,7 @@ const useScheduleAppointment = () => {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const { _id } = useStoreState((state) => state.user);
+  const { _id } = useStoreState((state) => state.user.user);
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -17,7 +17,7 @@ const useScheduleAppointment = () => {
         const response = await axiosInstance.get("/api/profile/doctors");
         setDoctors(response.data);
       } catch (e) {
-        toast.error(e.message);
+        toast.error(e?.response?.data?.error);
       } finally {
         setLoading(false);
       }
@@ -31,7 +31,7 @@ const useScheduleAppointment = () => {
       await axiosInstance.post("/api/appointments", { ...data, patient: _id });
       history("/patient-dashboard", { replace: true });
     } catch (e) {
-      toast.error(e.message);
+      toast.error(e?.response?.data?.error);
     } finally {
       setLoading(false);
     }

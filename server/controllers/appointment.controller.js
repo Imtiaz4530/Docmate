@@ -28,6 +28,22 @@ export const createAppointment = async (req, res) => {
 
   try {
     const { patient, doctor, date, time, reason } = req.body;
+    // Validate date and time
+    const appointmentDate = new Date(date);
+    const appointmentTime = new Date(`${date}T${time}`);
+
+    // Check if date is in the past
+    if (appointmentDate < new Date()) {
+      return res
+        .status(400)
+        .json({ error: "Cannot schedule appointments for past dates." });
+    }
+    // Optionally, check if time is in the past
+    if (appointmentTime < new Date()) {
+      return res
+        .status(400)
+        .json({ error: "Cannot schedule appointments for past times." });
+    }
 
     const appointment = new Appointment({
       patient,

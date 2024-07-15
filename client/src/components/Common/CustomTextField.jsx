@@ -17,6 +17,7 @@ const CustomTextField = React.forwardRef(
       gridProps = {},
       error,
       helperText,
+      inputProps,
       ...props
     },
     ref
@@ -34,6 +35,7 @@ const CustomTextField = React.forwardRef(
         type={type || "string"}
         error={error}
         helperText={helperText}
+        inputProps={inputProps}
         ref={ref}
         {...props}
       />
@@ -64,6 +66,7 @@ CustomTextField.propTypes = {
   gridProps: PropTypes.object,
   error: PropTypes.bool,
   helperText: PropTypes.string,
+  inputProps: PropTypes.object,
 };
 
 export default CustomTextField;
